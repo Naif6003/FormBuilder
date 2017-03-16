@@ -13,12 +13,11 @@
 <c:forEach items="${users}" var="user">
 <tr><td>${user.id}</td><td>${user.firstName}</td><td>${user.lastName}</td>
 <td><a href='view.html?id=${user.id}'>View</a></td>
-<td><a href='view/${user.id}.html'>View1</a></td>
+<!-- <td><a href='view/${user.id}.html'>View1</a></td> -->
 <td><a href='edit.html?id=${user.id}'>Edit</a></td>
+<td><a href='delete.html?id=${user.id}'>Delete</a></td>
 </tr>
-
 </c:forEach>
-
 </table>
 <a href="add.html">Add new User</a>
 </body>

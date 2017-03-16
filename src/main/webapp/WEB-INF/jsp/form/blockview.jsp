@@ -9,17 +9,18 @@
 <title>Page View</title>
 </head>
 <body>
-<a href="${docroot}form/add_block.html?id=${page.form.id}&p=${page.pageNumber}">Add New Block</a>
-
+<a href="${docroot}form/add_item.html?id=${block.id}">Add New Item</a>
 <table border=1>
-<tr><th>Form: </th><td>${page.form.name}</td></tr>
-<tr><th>Page Number</th><td>${page.pageNumber}</td></tr>
-<tr><th>Available</th><td></td></tr>
-
+<tr><th>Form: </th><td>${block.page.form.name}</td></tr>
+<tr><th>Page: </th><td>${block.page.pageNumber}</td></tr>
+<tr><th>Name: </th><td>${block.name}</td></tr>
+<tr><th>Description: </th><td>${block.description}</td></tr>
+<tr><th>Status</th><td>
+<c:choose>
+  <c:when test="${block.available==true}">Available</c:when>
+  <c:otherwise>Unavailable</c:otherwise>
+</c:choose>
+</td></tr>
 </table>
-Blocks:<br/>
-<c:forEach items="${page.block}" var="block">
-	<a href="${docroot}form/block/${block.id}.html">${block.name}</a><br/></a>
-</c:forEach>
 </body>
 </html>

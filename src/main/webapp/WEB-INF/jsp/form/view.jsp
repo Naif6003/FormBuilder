@@ -35,6 +35,5 @@
 </table>
 <a href="${docroot}form/edit_form.html?id=${form.id}">Edit Form</a><br/>
 <a href="${docroot}form/add_page.html?id=${form.id}">Add Page</a><br/>
-<a href="${docroot}form/add_block.html?id=${form.id}">Add Block</a><br/>
 </body>
 </html>

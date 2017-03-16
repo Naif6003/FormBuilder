@@ -36,6 +36,7 @@ public class Form implements Serializable {
 	private Date submitDate;
 	@Column(name = "finished")
 	private boolean isfinished;
+
 	
 	public Integer getId() {
 		return id;
@@ -98,3 +99,4 @@ public class Form implements Serializable {
 		this.isfinished = isfinished;
 	}
 }
+

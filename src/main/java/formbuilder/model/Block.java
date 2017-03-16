@@ -69,4 +69,22 @@ public class Block implements Serializable{
 	public void setItems(List<Item> items) {
 		this.items = items;
 	}
+
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
+
+	public int getBlockOrder() {
+		return blockOrder;
+	}
+
+	public void setBlockOrder(int blockOrder) {
+		this.blockOrder = blockOrder;
+	}
+	
+	
 }
