@@ -85,13 +85,22 @@ body {
 					<th>ID</th>
 					<th>Name</th>
 					<th>Description</th>
+					<th>Available</th>
 					<th>Action</th>
 				</tr>
 				<c:forEach items="${forms}" var="form">
 					<tr>
 						<td class="col-md-1">${form.id}</td>
 						<td class="col-md-3">${form.name}</td>
-						<td class="col-md-5">${form.description}</td>
+						<td class="col-md-3">${form.description}</td>
+						<c:choose>
+  							<c:when test="${form.available}">
+								<td class="col-md-2">YES</td>
+							</c:when>
+							<c:otherwise>
+								<td class="col-md-2">NO</td>
+							</c:otherwise>
+						</c:choose>	
 						
 						<td class="col-md-3">
 						<a href="view/${form.id}.html"><button type="button" class="btn btn-info btn-sm">View</button></a>

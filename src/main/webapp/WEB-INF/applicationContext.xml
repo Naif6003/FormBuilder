@@ -15,9 +15,9 @@
 
     <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
         <property name="driverClassName" value="org.postgresql.Driver" />
-        <property name="url" value="jdbc:postgresql://localhost:5432/Test" />
-        <property name="username" value="postgres" />
-        <property name="password" value="1234" />
+        <property name="url" value="jdbc:postgresql://localhost:5432/formbuilder" />
+        <property name="username" value="tee" />
+        <property name="password" value="admin" />
         <property name="initialSize" value="1" />
     </bean>
 

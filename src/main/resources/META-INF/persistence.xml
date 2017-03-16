@@ -9,6 +9,10 @@
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
+            <property name="javax.persistence.jdbc.user" value="tee" />
+            <property name="javax.persistence.jdbc.password" value="admin" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
+            <property name="hibernate.show_sql" value="true" />
         </properties>
     </persistence-unit>
 
