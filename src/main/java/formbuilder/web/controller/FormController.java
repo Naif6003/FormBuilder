@@ -77,7 +77,7 @@ public class FormController {
 
 		// TODO: This should actually be redirecting the the form details page
 		// to create the form specifics
-		return "redirect:form/list.html";
+		return "redirect:/form/list.html";
 	}
 
 	@RequestMapping(value = "/form/add_page.html", method = RequestMethod.GET)
