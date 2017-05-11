@@ -1,9 +1,18 @@
 package formbuilder.web.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
+import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -13,10 +22,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.WebApplicationContext;
 
 import formbuilder.model.core.User;
 import formbuilder.model.core.dao.UserDao;
@@ -38,6 +49,9 @@ public class FormController {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private WebApplicationContext context;
 
 	@Value("${upload.location}")
 	private String uploadLocation;
@@ -357,4 +371,63 @@ public class FormController {
 	}
 
 
+	@RequestMapping(value = "/form/matchpdf.html", method = RequestMethod.GET)
+	public String matchpdf(@RequestParam("id") Integer id, @RequestParam Integer pageNum, ModelMap models) {
+
+		// show online form with answers.
+
+		Form form = formDao.getForm(id);
+		if (pageNum > form.getTotalPages())
+			return "redirect:/form/matchpdf.html?id=" + id + "&pageNum=1";
+		List<Question> questionsPage = form.getQuestionsPage(pageNum);
+
+		models.put("form", form);
+		models.put("questionsPage", questionsPage);
+
+		// extract PDF form from server to do the matching.
+		File realPath = new File(context.getServletContext().getRealPath("/PDFresource/test1.pdf"));
+		// File file = new
+		// File("/Users/Nano/Desktop/text/book/resources/pdfs/TripInfo.pdf");
+
+		PDDocument pdfTemplate = null;
+		try {
+			pdfTemplate = PDDocument.load(realPath);
+		} catch (InvalidPasswordException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		PDDocumentCatalog docCatalog = pdfTemplate.getDocumentCatalog();
+		PDAcroForm acroForm = docCatalog.getAcroForm();
+
+		List<PDField> fields = acroForm.getFields();
+		//
+		for (int i = 0; i < fields.size(); i++) {
+			System.out.println(fields.get(i).getFullyQualifiedName());
+			System.out.println(" ");
+			System.out.println(fields.get(i).getFieldType());
+
+		}
+		//
+		models.put("fields", fields);
+
+		return "form/matchpdf";
+	}
+
+	@RequestMapping(value = "/form/matchpdf.html", method = RequestMethod.POST)
+	public String matchpdfpost(HttpServletRequest request) throws InvalidPasswordException, IOException {
+
+		System.out.println(request.getParameter("answers").toString());
+
+		File file = new File(context.getServletContext().getRealPath("/PDFresource/test1.pdf"));
+
+		PDDocument pdfTemplate = PDDocument.load(file);
+		PDDocumentCatalog docCatalog = pdfTemplate.getDocumentCatalog();
+		PDAcroForm acroForm = docCatalog.getAcroForm();
+
+		acroForm.getField("Trip name").setValue(request.getParameter("answers").toString());
+		pdfTemplate.save(new File(context.getServletContext().getRealPath("/PDFresource/newtest1.pdf")));
+		pdfTemplate.close();
+		return "redirect:listForm.html";
+	}
 }
