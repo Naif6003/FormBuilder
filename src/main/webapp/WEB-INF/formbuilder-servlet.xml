@@ -42,4 +42,6 @@
     
     <security:global-method-security pre-post-annotations="enabled" />
     
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+    
 </beans>

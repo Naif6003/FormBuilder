@@ -74,10 +74,12 @@ public class HomeController {
 
 	// ############### file upload controllers ######################
 
+
 	@RequestMapping(value = "/pdf/upload.html", method = RequestMethod.GET)
 	public String showUploadForm(HttpServletRequest request) throws IOException {
 
 		String realPath = context.getServletContext().getRealPath("/PDFresource");
+		System.out.println(realPath);
 		File dir = new File(realPath);
 		dir.mkdir();
 		request.setAttribute("path", dir);

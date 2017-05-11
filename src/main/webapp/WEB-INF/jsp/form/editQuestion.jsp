@@ -18,6 +18,10 @@
 				<c:if test="${question.type eq 'CHOICE'}">
 					<formbuilder:editChoice question="${question }"></formbuilder:editChoice>
 				</c:if>
+				<c:if test="${question.type eq 'FILE'}">
+					<formbuilder:editFile></formbuilder:editFile>
+				</c:if>
+
 				<a href="editPage.html?id=${id}&pageNum=${pageNum}"><button type="button" class="btn btn-warning btn-sm">
 						<span class="glyphicon glyphicon-arrow-left"></span> RETURN TO PAGE
 					</button></a>

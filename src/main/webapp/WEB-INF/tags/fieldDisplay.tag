@@ -95,6 +95,21 @@
 				</select>
 			</div>
 		</c:when>
+		
+		<c:when test="${question.tagAttribute.type eq 'file'}">
+			<div>
+				<label for="question${question.questionNumber}"
+					class="control-label">${question.questionNumber}.
+					${question.description}</label>
+			</div>
+			<div class="form-group">
+				<input type="file" name="file" multiple> <input type="text"
+					class="form-control"
+					placeholder="Browse or Drag your file here to upload" readonly>
+			</div>
+
+
+		</c:when>
 		<c:otherwise>
 			<p>QUESTION TYPE NOT FOUND</p>
 			<p>${question.tagAttribute.type }</p>

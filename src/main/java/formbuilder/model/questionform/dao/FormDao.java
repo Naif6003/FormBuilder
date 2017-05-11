@@ -31,4 +31,8 @@ public interface FormDao {
 
 	List<Answer> getAnswers(User user, Form form);
 
+	Answer getAnswer(User user, Question question);
+
+	Answer saveAnswer(Answer answer);
+
 }

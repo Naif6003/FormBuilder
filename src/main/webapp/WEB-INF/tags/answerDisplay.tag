@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ attribute name="question" required="true" type="formbuilder.model.questionform.Question"%>
 <%@ attribute name="index" required="true" type="java.lang.Integer"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
@@ -102,6 +103,38 @@
 		            <form:options items="${question.choices }"/>
 	            </form:select>
             </div>
+		</c:when>
+		<c:when test="${question.tagAttribute.type eq 'file'}">
+			<div>
+				<label for="question${question.questionNumber}"
+					class="control-label">${question.questionNumber}.
+					${question.description}</label>
+			</div>
+			<div class="form-group">
+				<input type="file" name="question${question.id }"
+					onchange="this.form.submit()" multiple> <input type="text"
+					class="form-control" placeholder="Browse or Drag your file here to upload"
+					readonly>
+			</div>
+			
+			<c:if test="${fn:length(question.answers[0].files) > 0}">
+				<table class="table table-striped table-hover ">
+					<thead>
+		  				<tr><th>Name</th><th>Operation</th></tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${question.answers[0].files}" var="file">
+							<tr>
+								<td><a href="viewFileAnswer.html?uId=${param.uId }&qId=${question.id }&filename=${file }" target="_blank">${file}</a></td>
+								<td><a class="btn"
+									href="deleteFileAnswer.html?uId=${param.uId }&fId=${param.fId }&pageNum=${param.pageNum }&qId=${question.id }&filename=${file }"
+									data-toggle="tooltip" title="Delete File" style="margin: 0 0 0 0"><i
+										class="glyphicon glyphicon-trash"></i></a></td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</c:if>
 		</c:when>
 		<c:otherwise>
 			<p>QUESTION TYPE NOT FOUND</p>

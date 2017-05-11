@@ -136,6 +136,11 @@ $(function() {
 							<span class="glyphicon glyphicon-collapse-down"></span> OPTION
 						</button></a>
 				</div>
+				<div>
+					<a href="addFileQuestion.html?id=${param.id}&pageNum=${param.pageNum}&type=file"><button type="button" class="btn btn-info btn-sm custom">
+							<span class="glyphicon glyphicon-file"></span> FILE
+						</button></a>
+				</div>
 				<hr />
 				<div>
 					<a href="addPage.html?id=${param.id}"><button type="button" class="btn btn-success btn-sm">

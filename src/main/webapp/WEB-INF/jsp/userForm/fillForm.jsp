@@ -40,7 +40,7 @@
 				</c:when>
 				<c:otherwise>
 
-					<form:form  modelAttribute="form" class = "form" >
+					<form:form  modelAttribute="form" class = "form" enctype="multipart/form-data">
 						<c:forEach items="${form.questions}" var="question" varStatus="status">
 							<c:if test="${question.pageNumber eq param.pageNum }">
 								<formbuilder:answerDisplay question="${question }" index="${status.index }"></formbuilder:answerDisplay>

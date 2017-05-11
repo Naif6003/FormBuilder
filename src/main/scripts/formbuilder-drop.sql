@@ -9,5 +9,6 @@ drop table files_upload;
 drop table choiceanswer_choices;
 drop table forms cascade;
 drop table answers cascade;
+drop table answers_questions cascade;
 
 drop sequence hibernate_sequence;

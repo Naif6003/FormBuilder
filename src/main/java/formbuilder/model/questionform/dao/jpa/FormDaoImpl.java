@@ -83,4 +83,17 @@ public class FormDaoImpl implements FormDao {
 				.setParameter("form", form).getResultList();
 		return (answers == null) ? new ArrayList<Answer>() : answers;
 	}
+
+	@Override
+	public Answer getAnswer(User user, Question question) {
+		List<Answer> answers = entityManager
+				.createQuery("from Answer where user = :user and question = :question", Answer.class)
+				.setParameter("user", user).setParameter("question", question).getResultList();
+		return answers.size() == 0 ? null : answers.get(0);
+	}
+
+	@Override
+	public Answer saveAnswer(Answer answer) {
+		return entityManager.merge(answer);
+	}
 }
