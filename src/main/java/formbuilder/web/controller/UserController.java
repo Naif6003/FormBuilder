@@ -1,6 +1,6 @@
 package formbuilder.web.controller;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -44,7 +44,7 @@ public class UserController {
 
 		models.put("user", userDao.getUser(id));
 		
-		Set<Form> forms = userDao.getUser(id).getForms();
+		List<Form> forms = userDao.getUser(id).getForms();
 		
 		models.put("forms", forms);
 		

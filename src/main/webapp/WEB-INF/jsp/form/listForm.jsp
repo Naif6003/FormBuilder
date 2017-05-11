@@ -27,7 +27,7 @@
 						href="editPage.html?id=${form.id}&pageNum=1" data-toggle="tooltip" title="Edit Form Page"><i class="glyphicon glyphicon-pencil"></i></a> <a class="btn" href="deleteForm.html?id=${form.id}"
 						data-toggle="tooltip" title="Delete Form"><i class="glyphicon glyphicon-trash"></i></a> <a class="btn" href="listAssignForm.html?id=${form.id}" data-toggle="tooltip" title="Assign PDF"><i
 							class="glyphicon glyphicon-open-file"></i></a>
-							<a class="btn" href="matchpdf.html?id=${form.id}&pageNum=1" data-toggle="tooltip" title="Match Form"><i
+							<a class="btn" href="userform.html?id=${form.id}&pageNum=1" data-toggle="tooltip" title="Match Form"><i
 							class="glyphicon glyphicon-open-file"></i></a></td>
 				</tr>
 			</c:forEach>

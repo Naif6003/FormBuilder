@@ -430,4 +430,16 @@ public class FormController {
 		pdfTemplate.close();
 		return "redirect:listForm.html";
 	}
+
+	@RequestMapping(value = "/form/userform.html", method = RequestMethod.GET)
+	public String userform(HttpServletRequest request, @RequestParam("id") Integer id, @RequestParam Integer pageNum,
+			ModelMap models) throws InvalidPasswordException, IOException {
+
+		List<User> users = userDao.getUsers();
+		request.setAttribute("users", users);
+
+		return "form/userform";
+	}
+
+
 }

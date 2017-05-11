@@ -1,9 +1,11 @@
 package formbuilder.model.core;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -74,13 +76,13 @@ public class User implements Serializable, UserDetails {
 	private boolean enabled;
 
 	@ManyToMany(mappedBy = "users")
-	private Set<Form> forms;
+	private List<Form> forms;
 
 	public User() {
 		enabled = true;
 		roles = new HashSet<String>();
 		roles.add("ROLE_USER");
-		forms = new HashSet<Form>();
+		forms = new ArrayList<Form>();
 	}
 
 	public int getId() {
@@ -187,11 +189,11 @@ public class User implements Serializable, UserDetails {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Set<Form> getForms() {
+	public List<Form> getForms() {
 		return forms;
 	}
 
-	public void setForms(Set<Form> forms) {
+	public void setForms(List<Form> forms) {
 		this.forms = forms;
 	}
 

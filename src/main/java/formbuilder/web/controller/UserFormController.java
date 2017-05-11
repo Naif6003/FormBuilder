@@ -13,7 +13,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,7 +65,7 @@ public class UserFormController {
 
 		models.put("user", userDao.getUser(id));
 
-		Set<Form> forms = userDao.getUser(id).getForms();
+		List<Form> forms = userDao.getUser(id).getForms();
 
 		models.put("forms", forms);
 
