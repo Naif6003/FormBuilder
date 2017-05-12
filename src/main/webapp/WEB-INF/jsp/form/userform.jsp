@@ -17,7 +17,11 @@ border: 1px solid black;
 	<c:if test="${user.getRole() == 'ROLE_USER'}">
 	<tr>
 		<td><c:out value="${user.getFirstName()}" /></td>
-		<td><c:out value="${user.getForms()}" /></td>
+		
+		<c:forEach items="${user.getForms()}" var="form">
+		<td><a  href="matchpdf.html?id=${form.getId()}&pageNum=1" ><c:out value="${form.getName()}" /></a></td>
+		</c:forEach>
+		
 	</tr>
 	</c:if>
 	</c:forEach>

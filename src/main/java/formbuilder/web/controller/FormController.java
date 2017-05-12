@@ -436,6 +436,11 @@ public class FormController {
 			ModelMap models) throws InvalidPasswordException, IOException {
 
 		List<User> users = userDao.getUsers();
+		System.out.println(users.get(0).getForms());
+		System.out.println(users.get(1).getForms());
+		System.out.println(users.get(2).getForms());
+		System.out.println(users.get(3).getForms().get(0).getName());
+
 		request.setAttribute("users", users);
 
 		return "form/userform";
