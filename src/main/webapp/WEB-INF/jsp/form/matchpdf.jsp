@@ -53,40 +53,28 @@ $(function(){
 				</c:when>
 				<c:otherwise>
 				<table border="1" >
-				<thead> <tr> <th> Question </th> <th> Answer </th></tr>
+				<thead> <tr><th> Question id </th> <th> Question </th> <th> Answer </th></tr>
 					<c:forEach items="${questionsPage}" var="question">
-						 	<tr><td> ${question.getDescription()}"</td>
-						  <td><span> ${question.getAnswers()}" </span></td></tr>
+						 	<tr><td><span> ${question.getId()} </span></td>
+						 	<td> ${question.getDescription()}</td>
+						  <td><span> ${question.getAnswers()} </span></td></tr>
 					</c:forEach>
 					</table>
 				</c:otherwise>
 			</c:choose>
 			
-			<form action="matchpdf.html" method="post" >
-			<c:forEach items="${fields}"  var="field">
-			  <label><c:out value="${field.getFullyQualifiedName()}" /></label>
-			   <%-- <c:if test =  "'${field.getFieldType()}' == 'Tx'"> 
-			 <input id="drop" name="answers"  type="text" />
-			  </c:if> 
-			 <c:if test="'${field.getFieldType() == 'Btn'}">
-			 <input id="drop" name="answers"  type="button" />
-			 </c:if>  --%>
-			 <c:choose>
-    			<c:when test="${field.getFieldType()=='Tx'}">
-        			<input id="drop" name="answers" draggable='true' type="text" />
-        			<br />
-    			</c:when> 
-    			<c:when test="${field.getFieldType() =='Btn'}">
-    			<input id="drop" name="answers"  type="button" />
-    			</c:when>   
-    			<c:otherwise>
-        			<br />
-    				</c:otherwise>
-					</c:choose>
-					<br />
+			<form:form modelAttribute="pdffield"  class="pdffield" >
+			
+			<table style="bodrder:1px">
+			<c:forEach items="${allPDF}"  var="field">
+			<tr><td><label> ${field.getName()} </label></td>
+			<td> <form:hidden path="name" id="drop" value="${field.getName()}" />
+			<td> <form:input path="questionId" id="drop"  /> </td></tr>
 			</c:forEach>
+			 
+			</table>
 			<input type="submit" name="submit">
-			</form> 
+			</form:form> 
 		</div>
 	</div>
 
@@ -114,7 +102,7 @@ $(function(){
 
 <!--   ################## the uploaded pdf from server #################-->
 
-<div class="col-md-offset-6 col-md-6">
+<%-- <div class="col-md-offset-6 col-md-6">
 
 <H2 align=center>FORM : </H2>
 	<div class="panel panel-primary">
@@ -128,12 +116,12 @@ $(function(){
 		<table>
 			<c:forEach items="${fields}"  var="field">
 			  <label><c:out value="${field.getFullyQualifiedName()}" /></label>
-			   <%-- <c:if test =  "'${field.getFieldType()}' == 'Tx'"> 
+			   <c:if test =  "'${field.getFieldType()}' == 'Tx'"> 
 			 <input id="drop" name="answers"  type="text" />
 			  </c:if> 
 			 <c:if test="'${field.getFieldType() == 'Btn'}">
 			 <input id="drop" name="answers"  type="button" />
-			 </c:if>  --%>
+			 </c:if> 
 			 
 			 <c:choose>
     			<c:when test="${field.getFieldType()=='Tx'}">
@@ -176,7 +164,7 @@ $(function(){
 			</ul>
 		</nav>
 	</div>
-</div>
+</div> --%>
 </div>
 
 </body>

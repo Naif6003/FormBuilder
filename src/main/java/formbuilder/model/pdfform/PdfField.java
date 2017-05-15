@@ -26,6 +26,8 @@ public class PdfField implements Serializable {
 	@ManyToOne
 	private Answer answer;
 
+	private String questionId;
+
 	@ManyToOne
 	private Pdf pdf;
 
@@ -71,6 +73,14 @@ public class PdfField implements Serializable {
 
 	public void setAnswer(Answer answer) {
 		this.answer = answer;
+	}
+
+	public String getQuestionId() {
+		return questionId;
+	}
+
+	public void setQuestionId(String questionId) {
+		this.questionId = questionId;
 	}
 
 }

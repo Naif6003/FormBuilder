@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import formbuilder.model.core.User;
+import formbuilder.model.pdfform.Pdf;
+import formbuilder.model.pdfform.PdfField;
 import formbuilder.model.questionform.Answer;
 import formbuilder.model.questionform.ChoiceQuestion;
 import formbuilder.model.questionform.Form;
@@ -95,5 +97,15 @@ public class FormDaoImpl implements FormDao {
 	@Override
 	public Answer saveAnswer(Answer answer) {
 		return entityManager.merge(answer);
+	}
+
+	@Override
+	public void savePdfField(PdfField pdffield) {
+		entityManager.merge(pdffield);
+	}
+
+	@Override
+	public void savePdf(Pdf pdf) {
+		entityManager.merge(pdf);
 	}
 }

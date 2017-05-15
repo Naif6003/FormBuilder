@@ -2,6 +2,7 @@ package formbuilder.web.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
@@ -31,6 +32,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import formbuilder.model.core.User;
 import formbuilder.model.core.dao.UserDao;
+import formbuilder.model.pdfform.Pdf;
+import formbuilder.model.pdfform.PdfField;
 import formbuilder.model.questionform.ChoiceQuestion;
 import formbuilder.model.questionform.FileQuestion;
 import formbuilder.model.questionform.Form;
@@ -40,7 +43,7 @@ import formbuilder.model.questionform.TextQuestion;
 import formbuilder.model.questionform.dao.FormDao;
 
 @Controller
-@SessionAttributes({ "form", "question" })
+@SessionAttributes({ "form", "question", "pdffield", "allPDF" })
 @PropertySource("WEB-INF/formbuilder.properties")
 public class FormController {
 
@@ -370,9 +373,28 @@ public class FormController {
 		return "redirect:/form/editQuestion.html?qId=" + qId;
 	}
 
+	// ################# show each users form ###################
+
+	@RequestMapping(value = "/form/userform.html", method = RequestMethod.GET)
+	public String userform(HttpServletRequest request, @RequestParam("id") Integer id, @RequestParam Integer pageNum,
+			ModelMap models) throws InvalidPasswordException, IOException {
+
+		List<User> users = userDao.getUsers();
+		// System.out.println(users.get(0).getForms());
+		// System.out.println(users.get(1).getForms());
+		// System.out.println(users.get(2).getForms());
+		// System.out.println(users.get(3).getForms().get(0).getName());
+
+		request.setAttribute("users", users);
+
+		return "form/userform";
+	}
+
+	// ##################### generate the new PDF file #####################
 
 	@RequestMapping(value = "/form/matchpdf.html", method = RequestMethod.GET)
-	public String matchpdf(@RequestParam("id") Integer id, @RequestParam Integer pageNum, ModelMap models) {
+	public String matchpdf(@RequestParam("id") Integer id, @RequestParam Integer pageNum, ModelMap models)
+			throws IOException {
 
 		// show online form with answers.
 
@@ -386,8 +408,6 @@ public class FormController {
 
 		// extract PDF form from server to do the matching.
 		File realPath = new File(context.getServletContext().getRealPath("/PDFresource/test1.pdf"));
-		// File file = new
-		// File("/Users/Nano/Desktop/text/book/resources/pdfs/TripInfo.pdf");
 
 		PDDocument pdfTemplate = null;
 		try {
@@ -401,49 +421,78 @@ public class FormController {
 		PDAcroForm acroForm = docCatalog.getAcroForm();
 
 		List<PDField> fields = acroForm.getFields();
-		//
+
+		Pdf pdf = null;
+		List<Pdf> allPDF = new ArrayList<>();
 		for (int i = 0; i < fields.size(); i++) {
 			System.out.println(fields.get(i).getFullyQualifiedName());
+			pdf = new Pdf();
+			allPDF.add(pdf);
+			pdf.setName(fields.get(i).getFullyQualifiedName());
+			formDao.savePdf(pdf);
 			System.out.println(" ");
 			System.out.println(fields.get(i).getFieldType());
 
 		}
 		//
+		
+		
+		// models.put("path", realPath);
+		models.put("allPDF", allPDF);
 		models.put("fields", fields);
+		models.put("pdffield", new PdfField());
 
+		pdfTemplate.close();
 		return "form/matchpdf";
 	}
 
 	@RequestMapping(value = "/form/matchpdf.html", method = RequestMethod.POST)
-	public String matchpdfpost(HttpServletRequest request) throws InvalidPasswordException, IOException {
+	public String matchpdfpost(HttpServletRequest request, @ModelAttribute PdfField pdffield,
+			@ModelAttribute Pdf allPDF)
+			throws InvalidPasswordException, IOException {
 
-		System.out.println(request.getParameter("answers").toString());
+		// System.out.println(" modelMap : " + pdffield.getId());
+		
+		// System.out.println(" the answer is " +
+		// request.getParameter("answersTx").toString());
 
-		File file = new File(context.getServletContext().getRealPath("/PDFresource/test1.pdf"));
+		// System.out.println(pdffield.get(0).getName());
 
-		PDDocument pdfTemplate = PDDocument.load(file);
-		PDDocumentCatalog docCatalog = pdfTemplate.getDocumentCatalog();
-		PDAcroForm acroForm = docCatalog.getAcroForm();
+		System.out.println("size for all pdf: " + pdffield.getName());
 
-		acroForm.getField("Trip name").setValue(request.getParameter("answers").toString());
-		pdfTemplate.save(new File(context.getServletContext().getRealPath("/PDFresource/newtest1.pdf")));
-		pdfTemplate.close();
+		List<PdfField> pdfarr = new ArrayList<>();
+		String[] names = pdffield.getName().split(",");
+		String[] questionId = pdffield.getQuestionId().split(",");
+		PdfField pdf = null;
+		System.out.println("length: " + pdfarr.size());
+		for (int i = 0; i < questionId.length; i++) {
+			pdf = new PdfField();
+			pdf.setName(names[i]);
+			pdf.setQuestionId(questionId[i]);
+			pdfarr.add(pdf);
+		}
+
+		for (int i = 0; i < pdfarr.size(); i++) {
+			formDao.savePdfField(pdfarr.get(i));
+		}
+
+		// String pathname = (String) request.getAttribute("path");
+		// System.out.println("path is: " + pathname);
+
+
+		// File file = new
+		// File(context.getServletContext().getRealPath("/PDFresource/test1.pdf"));
+		//
+		// PDDocument pdfTemplate = PDDocument.load(file);
+		// PDDocumentCatalog docCatalog = pdfTemplate.getDocumentCatalog();
+		// PDAcroForm acroForm = docCatalog.getAcroForm();
+		//
+		// acroForm.getField("Trip
+		// name").setValue(request.getParameter("answersTx").toString());
+		// pdfTemplate.save(new
+		// File(context.getServletContext().getRealPath("/PDFresource/newtest1.pdf")));
+		// pdfTemplate.close();
 		return "redirect:listForm.html";
-	}
-
-	@RequestMapping(value = "/form/userform.html", method = RequestMethod.GET)
-	public String userform(HttpServletRequest request, @RequestParam("id") Integer id, @RequestParam Integer pageNum,
-			ModelMap models) throws InvalidPasswordException, IOException {
-
-		List<User> users = userDao.getUsers();
-		System.out.println(users.get(0).getForms());
-		System.out.println(users.get(1).getForms());
-		System.out.println(users.get(2).getForms());
-		System.out.println(users.get(3).getForms().get(0).getName());
-
-		request.setAttribute("users", users);
-
-		return "form/userform";
 	}
 
 

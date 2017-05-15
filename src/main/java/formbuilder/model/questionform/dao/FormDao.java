@@ -3,6 +3,8 @@ package formbuilder.model.questionform.dao;
 import java.util.List;
 
 import formbuilder.model.core.User;
+import formbuilder.model.pdfform.Pdf;
+import formbuilder.model.pdfform.PdfField;
 import formbuilder.model.questionform.Answer;
 import formbuilder.model.questionform.ChoiceQuestion;
 import formbuilder.model.questionform.Form;
@@ -34,5 +36,9 @@ public interface FormDao {
 	Answer getAnswer(User user, Question question);
 
 	Answer saveAnswer(Answer answer);
+
+	void savePdfField(PdfField pdffield);
+
+	void savePdf(Pdf pdf);
 
 }
