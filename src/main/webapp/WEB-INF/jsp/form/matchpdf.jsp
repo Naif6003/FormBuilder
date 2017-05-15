@@ -74,6 +74,7 @@ $(function(){
 			 
 			</table>
 			<input type="submit" name="submit">
+			<input type="hidden" value="${pdfname}" />
 			</form:form> 
 		</div>
 	</div>

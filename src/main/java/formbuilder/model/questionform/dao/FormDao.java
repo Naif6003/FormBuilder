@@ -41,4 +41,5 @@ public interface FormDao {
 
 	void savePdf(Pdf pdf);
 
+	List<PdfField> getFields(Integer formId);
 }

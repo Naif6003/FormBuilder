@@ -23,6 +23,8 @@ public class PdfField implements Serializable {
 
 	private boolean enabled;
 
+	private Integer formId;
+
 	@ManyToOne
 	private Answer answer;
 
@@ -81,6 +83,14 @@ public class PdfField implements Serializable {
 
 	public void setQuestionId(String questionId) {
 		this.questionId = questionId;
+	}
+
+	public Integer getFormId() {
+		return formId;
+	}
+
+	public void setFormId(Integer formId) {
+		this.formId = formId;
 	}
 
 }

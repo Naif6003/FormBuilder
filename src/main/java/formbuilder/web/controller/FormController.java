@@ -380,11 +380,11 @@ public class FormController {
 			ModelMap models) throws InvalidPasswordException, IOException {
 
 		List<User> users = userDao.getUsers();
-		// System.out.println(users.get(0).getForms());
-		// System.out.println(users.get(1).getForms());
-		// System.out.println(users.get(2).getForms());
-		// System.out.println(users.get(3).getForms().get(0).getName());
+		File realPath = new File(context.getServletContext().getRealPath("/PDFresource"));
+		File[] files = realPath.listFiles();
 
+		models.put("id", id);
+		models.put("files", files);
 		request.setAttribute("users", users);
 
 		return "form/userform";
@@ -393,22 +393,24 @@ public class FormController {
 	// ##################### generate the new PDF file #####################
 
 	@RequestMapping(value = "/form/matchpdf.html", method = RequestMethod.GET)
-	public String matchpdf(@RequestParam("id") Integer id, @RequestParam Integer pageNum, ModelMap models)
+	public String matchpdf(HttpServletRequest request,
+			@RequestParam("fileName") Integer fileId, @RequestParam("PDF") String pdff,
+			ModelMap models)
 			throws IOException {
 
 		// show online form with answers.
 
-		Form form = formDao.getForm(id);
-		if (pageNum > form.getTotalPages())
-			return "redirect:/form/matchpdf.html?id=" + id + "&pageNum=1";
-		List<Question> questionsPage = form.getQuestionsPage(pageNum);
+		Form form = formDao.getForm(fileId);
+		// if (1 > form.getTotalPages())
+		// return "redirect:/form/matchpdf.html?id=" + id + "&pageNum=1";
+		List<Question> questionsPage = form.getQuestionsPage(1);
 
 		models.put("form", form);
 		models.put("questionsPage", questionsPage);
 
+		System.out.println("or file name is : " + pdff);
 		// extract PDF form from server to do the matching.
-		File realPath = new File(context.getServletContext().getRealPath("/PDFresource/test1.pdf"));
-
+		File realPath = new File(context.getServletContext().getRealPath("/PDFresource/"+pdff));
 		PDDocument pdfTemplate = null;
 		try {
 			pdfTemplate = PDDocument.load(realPath);
@@ -437,7 +439,7 @@ public class FormController {
 		//
 		
 		
-		// models.put("path", realPath);
+		models.put("pdfname", pdf);
 		models.put("allPDF", allPDF);
 		models.put("fields", fields);
 		models.put("pdffield", new PdfField());
@@ -447,10 +449,12 @@ public class FormController {
 	}
 
 	@RequestMapping(value = "/form/matchpdf.html", method = RequestMethod.POST)
-	public String matchpdfpost(HttpServletRequest request, @ModelAttribute PdfField pdffield,
+	public String matchpdfpost(HttpServletRequest request, @RequestParam("PDF") String pdfName,
+			@RequestParam("fileName") Integer formId, @ModelAttribute PdfField pdffield,
 			@ModelAttribute Pdf allPDF)
 			throws InvalidPasswordException, IOException {
 
+		// debuging some values
 		// System.out.println(" modelMap : " + pdffield.getId());
 		
 		// System.out.println(" the answer is " +
@@ -458,17 +462,21 @@ public class FormController {
 
 		// System.out.println(pdffield.get(0).getName());
 
-		System.out.println("size for all pdf: " + pdffield.getName());
+		// System.out.println("name of the pdf to modify: " + pdfName);
+		// System.out.println("size for all pdf: " + pdffield.getName());
 
 		List<PdfField> pdfarr = new ArrayList<>();
 		String[] names = pdffield.getName().split(",");
 		String[] questionId = pdffield.getQuestionId().split(",");
 		PdfField pdf = null;
-		System.out.println("length: " + pdfarr.size());
+		// System.out.println("length: " + pdfarr.size());
+
+		// inserting pdf objects to the DB table
 		for (int i = 0; i < questionId.length; i++) {
 			pdf = new PdfField();
 			pdf.setName(names[i]);
 			pdf.setQuestionId(questionId[i]);
+			pdf.setFormId(formId);
 			pdfarr.add(pdf);
 		}
 
@@ -476,22 +484,23 @@ public class FormController {
 			formDao.savePdfField(pdfarr.get(i));
 		}
 
-		// String pathname = (String) request.getAttribute("path");
-		// System.out.println("path is: " + pathname);
+		List<PdfField> pdfFiles = formDao.getFields(formId);
 
+		// get the file that we want to fill
+		File file = new File(context.getServletContext().getRealPath("/PDFresource/" + pdfName));
+		PDDocument pdfTemplate = PDDocument.load(file);
+		PDDocumentCatalog docCatalog = pdfTemplate.getDocumentCatalog();
+		PDAcroForm acroForm = docCatalog.getAcroForm();
 
-		// File file = new
-		// File(context.getServletContext().getRealPath("/PDFresource/test1.pdf"));
-		//
-		// PDDocument pdfTemplate = PDDocument.load(file);
-		// PDDocumentCatalog docCatalog = pdfTemplate.getDocumentCatalog();
-		// PDAcroForm acroForm = docCatalog.getAcroForm();
-		//
-		// acroForm.getField("Trip
-		// name").setValue(request.getParameter("answersTx").toString());
-		// pdfTemplate.save(new
-		// File(context.getServletContext().getRealPath("/PDFresource/newtest1.pdf")));
-		// pdfTemplate.close();
+		// Match the PDF fields with application fields
+		for (int i = 0; i < pdfFiles.size(); i++) {
+			acroForm.getField(pdfFiles.get(i).getName()).setValue(pdfFiles.get(i).getQuestionId());
+		}
+
+		// generate the new form with old form name plus (new) word
+		String formName = formDao.getForm(formId).getName();
+		pdfTemplate.save(new File(context.getServletContext().getRealPath("/PDFresource/new" + formName +"PDF.pdf")));
+		pdfTemplate.close();
 		return "redirect:listForm.html";
 	}
 

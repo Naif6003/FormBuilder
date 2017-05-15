@@ -108,4 +108,10 @@ public class FormDaoImpl implements FormDao {
 	public void savePdf(Pdf pdf) {
 		entityManager.merge(pdf);
 	}
+
+	@Override
+	public List<PdfField> getFields(Integer formId) {
+		return entityManager.createQuery("from PdfField p where formid = :formid", PdfField.class)
+				.setParameter("formid", formId).getResultList();
+	}
 }
