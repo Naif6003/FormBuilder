@@ -13,6 +13,7 @@ import formbuilder.model.core.User;
 import formbuilder.model.pdfform.Pdf;
 import formbuilder.model.pdfform.PdfField;
 import formbuilder.model.questionform.Answer;
+import formbuilder.model.questionform.ChoiceAnswer;
 import formbuilder.model.questionform.ChoiceQuestion;
 import formbuilder.model.questionform.Form;
 import formbuilder.model.questionform.Question;
@@ -113,5 +114,10 @@ public class FormDaoImpl implements FormDao {
 	public List<PdfField> getFields(Integer formId) {
 		return entityManager.createQuery("from PdfField p where formid = :formid", PdfField.class)
 				.setParameter("formid", formId).getResultList();
+	}
+
+	@Override
+	public List<ChoiceAnswer> getChoiceAnswer() {
+		return entityManager.createQuery("from ChoiceAnswer order by id", ChoiceAnswer.class).getResultList();
 	}
 }

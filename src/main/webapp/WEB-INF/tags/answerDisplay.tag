@@ -74,7 +74,8 @@
 			<c:forEach items="${question.choices}" var="choice" varStatus="loop">
 				<div class="checkbox">
 	    			<label>
-						<form:checkbox path="questions[${index }].answers[0].selections[${loop.index }]" value="${choice }" label="${choice }"/>
+						 <%-- <form:checkbox path="questions[${index }].answers[0].selections[${loop.index }]" value="${choice }" label="${choice }"/> --%>
+						 <form:checkbox path="questions[${index }].answers[0].selections" value="${choice}" label="${choice }"/> 
 	    			</label>
 	  			</div>			
 			</c:forEach>

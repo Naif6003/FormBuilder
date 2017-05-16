@@ -34,6 +34,7 @@ import formbuilder.model.core.User;
 import formbuilder.model.core.dao.UserDao;
 import formbuilder.model.pdfform.Pdf;
 import formbuilder.model.pdfform.PdfField;
+import formbuilder.model.questionform.ChoiceAnswer;
 import formbuilder.model.questionform.ChoiceQuestion;
 import formbuilder.model.questionform.FileQuestion;
 import formbuilder.model.questionform.Form;
@@ -436,27 +437,36 @@ public class FormController {
 			// System.out.println(fields.get(i).getFieldType());
 		}
 
-		ChoiceQuestion choice = new ChoiceQuestion();
-		for (int i = 0; i < questionsPage.size(); i++) {
-			// System.out.println("question get attribute: " +
-			// questionsPage.get(i).getTagAttribute().getType());
-			// if (questionsPage.get(i).getTagAttribute().getType() ==
-			// "checkbox") {
-			// System.out.println("################" +
-			// choice.getChoices().get(i));
-			// }
 
-			// System.out.println("type of each question: " +
-			// questionsPage.get(i).getType());
-			// System.out.println("checkbox choices: " +
-			// questionsPage.get(i).getAnswers());
+		// ChoiceQuestion choice = new ChoiceQuestion();
+
+		List<ChoiceAnswer> choices = formDao.getChoiceAnswer();
+		for (int i = 0; i < choices.size(); i++) {
+			// System.out.println("choices : " +
+			// choices.get(i).getSelections().toString());
 		}
 
-		// ChoiceAnswer ans = new ChoiceAnswer();
-		//
-		// System.out.println(ans.getSelections().toString());
+		String[] checkboxname = fields.get(1).getAlternateFieldName().split(" |_");
+	
+		for (int i = 0; i < fields.size(); i++) {
 
-		models.put("choice", choice);
+			/// System.out.println("names are : " + checkboxname[i].toString());
+			// System.out.println("mapping name: " +
+			// fields.get(1).getMappingName()); == mull
+			// System.out.println("getField iterator : " +
+			// fields.get(i).getAcroForm().getFieldIterator()); == nope
+			// System.out.println("value as a string: " +
+			// fields.get(i).getValueAsString()); nope
+			System.out.println("partial name to string : " + fields.get(i).getPartialName().toString());
+			// System.out.println("mapping name: " +
+			// fields.get(1).getAlternateFieldName().split(" "));
+			System.out.println(" ");
+		}
+
+		// System.out.println("fields: " +
+		// fields.get(1).getAlternateFieldName());
+		models.put("checkboxname", checkboxname);
+		models.put("choices", choices);
 		models.put("pdfname", pdf);
 		models.put("allPDF", allPDF);
 		models.put("fields", fields);

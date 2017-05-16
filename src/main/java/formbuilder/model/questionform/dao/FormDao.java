@@ -6,6 +6,7 @@ import formbuilder.model.core.User;
 import formbuilder.model.pdfform.Pdf;
 import formbuilder.model.pdfform.PdfField;
 import formbuilder.model.questionform.Answer;
+import formbuilder.model.questionform.ChoiceAnswer;
 import formbuilder.model.questionform.ChoiceQuestion;
 import formbuilder.model.questionform.Form;
 import formbuilder.model.questionform.Question;
@@ -42,4 +43,8 @@ public interface FormDao {
 	void savePdf(Pdf pdf);
 
 	List<PdfField> getFields(Integer formId);
+
+	List<ChoiceAnswer> getChoiceAnswer();
+
+
 }

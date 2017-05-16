@@ -9,17 +9,27 @@ public class ChoiceAnswer extends Answer {
 
 	private static final long serialVersionUID = 1L;
 
-	private String[] selections;
+	// private String[] selections;
+	//
+	// public ChoiceAnswer() {
+	//
+	// }
+	//
+	// public String[] getSelections() {
+	// return selections;
+	// }
+	//
+	// public void setSelections(String[] selections) {
+	// this.selections = selections;
+	// }
 
-	public ChoiceAnswer() {
+	private String selections;
 
-	}
-
-	public String[] getSelections() {
+	public String getSelections() {
 		return selections;
 	}
 
-	public void setSelections(String[] selections) {
+	public void setSelections(String selections) {
 		this.selections = selections;
 	}
 

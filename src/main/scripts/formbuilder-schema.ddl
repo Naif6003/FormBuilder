@@ -9,7 +9,7 @@ create sequence hibernate_sequence start 1 increment 1;
         answer_type varchar(31) not null,
         id int4 not null,
         enabled boolean not null,
-        selections bytea,
+        selections varchar(255),
         text varchar(255),
         question_id int4,
         user_id int4,

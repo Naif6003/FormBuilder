@@ -4,6 +4,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="formbuilder" uri="http://formbuilder.com/formbuilder"%>
 <%@ taglib prefix="formbuilder" uri="http://formbuilder.com/formbuilder"%>
+
+
 <html>
 <head>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
@@ -61,8 +63,9 @@ $(function(){
 						 	<td><span> ${question.getAnswers()} </span></td>
 						 	</c:if>
 						  <c:if test="${question.getTagAttribute().getType() == 'checkbox' }">
-						  <td><span> ${choice.getChoices()} </span></td>
-						
+						  <c:forEach items="${choices}" var="choice">
+						  <td><span> ${choice.getSelections().toString()} </span></td>
+						  </c:forEach>
 						  </c:if></tr>  
 	
 					</c:forEach>
@@ -81,20 +84,21 @@ $(function(){
 		<c:forEach items="${fields}"  var="field">
 			
 			<tr>
-				<td><label> ${field.getFullyQualifiedName()} :</label></td>
+				
 			  
 			  <c:if test="${field.getFieldType() == 'Tx' || field.getFieldType() == 'text'}">
+			  <td><label> ${field.getFullyQualifiedName()} :</label></td>
 					<td><form:input path="questionId" id="drop" type="text"/></td>
 				</c:if>
-			 
-			 <c:if test="${field.getFieldType() == 'Btn' || field.getFieldType() == 'checkbox'}">
-			 		<td><form:input class="checkbox" path="questionId"  id="drop" type="Checkbox" value="Yes"/></td>
-			 	</c:if>  
-			 
+
 			 <form:hidden path="name" id="drop" value="${field.getFullyQualifiedName()}" />
 				
+			 <c:if test="${field.getFieldType() == 'Btn' || field.getFieldType() == 'checkbox'}">
+			  <td><label> ${field.getPartialName()} :</label></td> 
+			 		 <td><form:input class="checkbox" path="questionId"  id="drop" type="Checkbox" value="Yes"/></td>
+
+				</c:if>
 				</c:forEach>
-			 
 			</table>
 			
 			<input type="submit" name="submit"  class="btn btn-success btn-raised" >
@@ -103,6 +107,7 @@ $(function(){
 			</form:form>
 			</div> 
 		</div>
+		
 <script>
 
 $('.checkbox').change(function() {
