@@ -35,9 +35,15 @@ $(function(){
 </script>
 </head>
 <body>
-
-<table>
-<thead> <tr><th> User name </th><th> Forms assign to user </th></tr>
+<div class="row">
+<div class="col-md-offset-3 col-md-6">
+	
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+				<h4> Generate new PDF </h4>
+				</div>
+<table class="table table-striped table-bordered-2" style="text-align= center; vertical-align:middle;" >
+<thead> <tr><th> User name </th><th> Form ID </th><th> Forms assign to user </th></tr>
 </thead>
 <tbody>
 	<c:forEach items="${users}" var="user">
@@ -55,67 +61,39 @@ $(function(){
 	</c:forEach>
 </tbody>
 </table>
+<br />
 
-
-<table>
-<thead> <tr><th> file name </th></tr> </thead>
+<table class="table table-striped table-bordered-2" style="text-align= center; vertical-align:middle;">
+<thead> <tr><th> File Name </th></tr> </thead>
 <tbody>
 
-
-<tr><c:forEach items="${files}" var="file">
-		<td><span>${file.getName()}</span></td>
-	</c:forEach></tr>
+<c:forEach items="${files}" var="file">
+		<tr><td><span>${file.getName()}</span></td></tr>
+	</c:forEach>
 	
 	
-</tbody>
+</tbody >
 </table>
-
-<!-- <label> drag and drop the name of the file you want to fill </label>
-<input id="drop" type="text" name="fileName"  />
-
- -->
-<form:form action="matchpdf.html" method="get">
-<!-- <table>
-
-<thead> <tr> <th> Users </th><th> forms </th><th> PDF files </th> </tr> 
-<tbody> -->
-<%-- <c:forEach items="${users}" var="user">
-	<c:if test="${user.getRole() == 'ROLE_USER'}">
-	<tr>
-		<td><c:out value="${user.getFirstName()}" /></td>
-		
-		<td><select name="selectForm">
-		<c:forEach items="${user.getForms()}" var="form">
-		 <td><a  href="matchpdf.html?id=${form.getId()}&pageNum=1" ><c:out value="${form.getName()}" /></a></td> 
-		<option> </option>
-		<option> ${form.getName()} </option>
-		</c:forEach>
-		</select></td>
-		
-		
-		<td><select name="selectPDF">
-		<c:forEach items="${files}" var="file">
-			<option> </option>
-			<option>${file.getName()}</option>
-		</c:forEach>
-		</select></td>
-	</tr>
-	</c:if>
-	</c:forEach> --%>
-	
- <label> drag and drop the name of the file you want to fill </label>
-<input id="drop" type="text" name="fileName"  />
-<br />
-
-<label> PDF </label>
-<input id="drop" type="text" name="PDF"  />
-	
-<!-- 	
-</tbody>
-</table> -->
-<br />
-<input type="submit" />
-</form:form>
-
+	<div align=center>
+							<form:form action="matchpdf.html" method="get" id="my-awesome-dropzone">
+								
+								
+								<div class="form-group">
+								 <label style="color:black;"> Form Id </label>
+								 <input id="drop" type="text" name="fileName"  />
+								</div>
+								
+								<div class="form-group">
+								<label style="color:black;"> File Name </label>
+								<input id="drop" type="text" name="PDF"  />
+								</div>
+								<br />
+								
+								<input type="submit" class="btn btn-success btn-raised"/>
+							</form:form>
+</div>
+</div>
+</div>
+</div>
 </body>
 </html>

@@ -67,6 +67,11 @@
 		<put-attribute name="title" value="Match Form" />
 		<put-attribute name="content" value="/WEB-INF/jsp/form/matchpdf.jsp" />
 	</definition>
+	
+	<definition name="form/userform" extends="template">
+		<put-attribute name="title" value="Generate PDF" />
+		<put-attribute name="content" value="/WEB-INF/jsp/form/userform.jsp" />
+	</definition>
 
 	<definition name="form/assignForm" extends="template">
 		<put-attribute name="title" value="Assign Form" />

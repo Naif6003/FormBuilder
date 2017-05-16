@@ -408,7 +408,7 @@ public class FormController {
 		models.put("form", form);
 		models.put("questionsPage", questionsPage);
 
-		System.out.println("or file name is : " + pdff);
+		// System.out.println("or file name is : " + pdff);
 		// extract PDF form from server to do the matching.
 		File realPath = new File(context.getServletContext().getRealPath("/PDFresource/"+pdff));
 		PDDocument pdfTemplate = null;
@@ -427,18 +427,36 @@ public class FormController {
 		Pdf pdf = null;
 		List<Pdf> allPDF = new ArrayList<>();
 		for (int i = 0; i < fields.size(); i++) {
-			System.out.println(fields.get(i).getFullyQualifiedName());
+			// System.out.println(fields.get(i).getFullyQualifiedName());
 			pdf = new Pdf();
 			allPDF.add(pdf);
 			pdf.setName(fields.get(i).getFullyQualifiedName());
 			formDao.savePdf(pdf);
-			System.out.println(" ");
-			System.out.println(fields.get(i).getFieldType());
-
+			// System.out.println(" ");
+			// System.out.println(fields.get(i).getFieldType());
 		}
+
+		ChoiceQuestion choice = new ChoiceQuestion();
+		for (int i = 0; i < questionsPage.size(); i++) {
+			// System.out.println("question get attribute: " +
+			// questionsPage.get(i).getTagAttribute().getType());
+			// if (questionsPage.get(i).getTagAttribute().getType() ==
+			// "checkbox") {
+			// System.out.println("################" +
+			// choice.getChoices().get(i));
+			// }
+
+			// System.out.println("type of each question: " +
+			// questionsPage.get(i).getType());
+			// System.out.println("checkbox choices: " +
+			// questionsPage.get(i).getAnswers());
+		}
+
+		// ChoiceAnswer ans = new ChoiceAnswer();
 		//
-		
-		
+		// System.out.println(ans.getSelections().toString());
+
+		models.put("choice", choice);
 		models.put("pdfname", pdf);
 		models.put("allPDF", allPDF);
 		models.put("fields", fields);
@@ -454,28 +472,18 @@ public class FormController {
 			@ModelAttribute Pdf allPDF)
 			throws InvalidPasswordException, IOException {
 
-		// debuging some values
-		// System.out.println(" modelMap : " + pdffield.getId());
-		
-		// System.out.println(" the answer is " +
-		// request.getParameter("answersTx").toString());
-
-		// System.out.println(pdffield.get(0).getName());
-
-		// System.out.println("name of the pdf to modify: " + pdfName);
-		// System.out.println("size for all pdf: " + pdffield.getName());
 
 		List<PdfField> pdfarr = new ArrayList<>();
 		String[] names = pdffield.getName().split(",");
-		String[] questionId = pdffield.getQuestionId().split(",");
+		String[] answers = pdffield.getQuestionId().split(",");
 		PdfField pdf = null;
-		// System.out.println("length: " + pdfarr.size());
 
 		// inserting pdf objects to the DB table
-		for (int i = 0; i < questionId.length; i++) {
+		for (int i = 0; i < answers.length; i++) {
 			pdf = new PdfField();
 			pdf.setName(names[i]);
-			pdf.setQuestionId(questionId[i]);
+			System.out.println("answers : " + answers[i]);
+			pdf.setQuestionId(answers[i]);
 			pdf.setFormId(formId);
 			pdfarr.add(pdf);
 		}
@@ -494,6 +502,10 @@ public class FormController {
 
 		// Match the PDF fields with application fields
 		for (int i = 0; i < pdfFiles.size(); i++) {
+			// if (pdfFiles.get(i).getQuestionId() != "Yes" ||
+			// pdfFiles.get(i).getQuestionId() == "Off") {
+			//
+			// }
 			acroForm.getField(pdfFiles.get(i).getName()).setValue(pdfFiles.get(i).getQuestionId());
 		}
 

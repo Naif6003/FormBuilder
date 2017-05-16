@@ -3,7 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="formbuilder" uri="http://formbuilder.com/formbuilder"%>
-
+<%@ taglib prefix="formbuilder" uri="http://formbuilder.com/formbuilder"%>
 <html>
 <head>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
@@ -37,7 +37,7 @@ $(function(){
 <body dropzone="">
 
 <div class="row">
-<div class="col-md-offset-0 col-md-6">
+<div class="col-md-offset-3 col-md-6">
 
 	<h1 align=center> Match online form with PDF file</h1>
 
@@ -52,101 +52,78 @@ $(function(){
 					<h3 class="text-center">There is no question on this page.</h3>
 				</c:when>
 				<c:otherwise>
-				<table border="1" >
-				<thead> <tr><th> Question id </th> <th> Question </th> <th> Answer </th></tr>
+				<table class="table table-striped table-bordered-2" style="text-align= center; vertical-align:middle;" >
+				<thead> <tr><th> Question id </th> <th> Question </th> <th> Answer </th></tr> </thead>
 					<c:forEach items="${questionsPage}" var="question">
 						 	<tr><td><span> ${question.getId()} </span></td>
 						 	<td> ${question.getDescription()}</td>
-						  <td><span> ${question.getAnswers()} </span></td></tr>
+						 	<c:if test="${question.getTagAttribute().getType() == 'text' }">
+						 	<td><span> ${question.getAnswers()} </span></td>
+						 	</c:if>
+						  <c:if test="${question.getTagAttribute().getType() == 'checkbox' }">
+						  <td><span> ${choice.getChoices()} </span></td>
+						
+						  </c:if></tr>  
+	
 					</c:forEach>
 					</table>
 				</c:otherwise>
 			</c:choose>
+			</div>
+
 			
+			
+			
+			<div>
 			<form:form modelAttribute="pdffield"  class="pdffield" >
+			<table class="table table-striped table-bordered-2" style="text-align= center; vertical-align:middle;">
 			
-			<table style="bodrder:1px">
-			<c:forEach items="${allPDF}"  var="field">
-			<tr><td><label> ${field.getName()} </label></td>
-			<td> <form:hidden path="name" id="drop" value="${field.getName()}" />
-			<td> <form:input path="questionId" id="drop"  /> </td></tr>
-			</c:forEach>
+		<c:forEach items="${fields}"  var="field">
+			
+			<tr>
+				<td><label> ${field.getFullyQualifiedName()} :</label></td>
+			  
+			  <c:if test="${field.getFieldType() == 'Tx' || field.getFieldType() == 'text'}">
+					<td><form:input path="questionId" id="drop" type="text"/></td>
+				</c:if>
+			 
+			 <c:if test="${field.getFieldType() == 'Btn' || field.getFieldType() == 'checkbox'}">
+			 		<td><form:input class="checkbox" path="questionId"  id="drop" type="Checkbox" value="Yes"/></td>
+			 	</c:if>  
+			 
+			 <form:hidden path="name" id="drop" value="${field.getFullyQualifiedName()}" />
+				
+				</c:forEach>
 			 
 			</table>
-			<input type="submit" name="submit">
+			
+			<input type="submit" name="submit"  class="btn btn-success btn-raised" >
 			<input type="hidden" value="${pdfname}" />
-			</form:form> 
-		</div>
-	</div>
-
-	<div class="text-center">
-		<nav aria-label="Page navigation">
-			<ul class="pagination">
-				<li><a href="#" aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-				</a></li>
-				<c:forEach begin="1" end="${form.totalPages}" step="1" var="i">
-					<c:choose>
-						<c:when test="${param.pageNum eq i }">
-							<li class="active"><a href="" onclick="return false">${i} </a></li>
-						</c:when>
-						<c:otherwise>
-							<li><a href="viewPage.html?id=${param.id}&pageNum=${i}">${i} </a></li>
-						</c:otherwise>
-					</c:choose>
-				</c:forEach>
-				<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-				</a></li>
-			</ul>
-		</nav>
-	</div>
-</div>
-
-<!--   ################## the uploaded pdf from server #################-->
-
-<%-- <div class="col-md-offset-6 col-md-6">
-
-<H2 align=center>FORM : </H2>
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h4 class="panel-title">PAGE ${param.pageNum}</h4>
-		</div>
-		
-		
-		<div class="panel-body">
-		<form action="matchpdf.html" method="post" >
-		<table>
-			<c:forEach items="${fields}"  var="field">
-			  <label><c:out value="${field.getFullyQualifiedName()}" /></label>
-			   <c:if test =  "'${field.getFieldType()}' == 'Tx'"> 
-			 <input id="drop" name="answers"  type="text" />
-			  </c:if> 
-			 <c:if test="'${field.getFieldType() == 'Btn'}">
-			 <input id="drop" name="answers"  type="button" />
-			 </c:if> 
 			 
-			 <c:choose>
-    			<c:when test="${field.getFieldType()=='Tx'}">
-        			<input id="drop" name="answers" draggable='true' type="text" />
-        			<br />
-    			</c:when> 
-    			<c:when test="${field.getFieldType() =='Btn'}">
-    			<input id="drop" name="answers"  type="button" />
-    			</c:when>   
-    			<c:otherwise>
-        			<br />
-    				</c:otherwise>
-					</c:choose>
-					<br />
-			
-			</c:forEach>
-			</table>
-			<input type="submit" name="submit">
-			</form> 
+			</form:form>
+			</div> 
 		</div>
-	</div>
+<script>
 
-	<div class="text-center">
-		<nav aria-label="Page navigation">
+$('.checkbox').change(function() {
+       /*  $(".checkbox").val(($(this).is(':checked')) ? "Yes" : "Off"); */
+       if($(".checkbox").is(':checked')){
+    	   $(".checkbox").val = "Yes";
+       }else{
+    	   $(".checkbox").val = "Off";
+       }
+});
+
+</script>
+
+
+
+
+
+
+
+
+
 			<ul class="pagination">
 				<li><a href="#" aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 				</a></li>
@@ -163,10 +140,8 @@ $(function(){
 				<li><a href="#" aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 				</a></li>
 			</ul>
-		</nav>
-	</div>
-</div> --%>
-</div>
+		</div>
+		</div>
 
 </body>
 </html> 
