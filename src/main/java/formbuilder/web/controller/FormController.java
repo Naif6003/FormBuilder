@@ -492,8 +492,9 @@ public class FormController {
 		for (int i = 0; i < answers.length; i++) {
 			pdf = new PdfField();
 			pdf.setName(names[i]);
-			System.out.println("answers : " + answers[i]);
 			pdf.setQuestionId(answers[i]);
+			System.out.println("answers : " + answers[i]);
+			// pdf.setQuestionId(answers[i]);
 			pdf.setFormId(formId);
 			pdfarr.add(pdf);
 		}

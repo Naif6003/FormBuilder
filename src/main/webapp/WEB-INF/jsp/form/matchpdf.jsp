@@ -95,7 +95,7 @@ $(function(){
 				
 			 <c:if test="${field.getFieldType() == 'Btn' || field.getFieldType() == 'checkbox'}">
 			  <td><label> ${field.getPartialName()} :</label></td> 
-			 		 <td><form:input class="checkbox" path="questionId"  id="drop" type="Checkbox" value="Yes"/></td>
+			 		 <td><form:input class="checkbox" path="questionId"  id="drop" type="Checkbox" /></td>
 
 				</c:if>
 				</c:forEach>
@@ -110,15 +110,13 @@ $(function(){
 		
 <script>
 
-$('.checkbox').change(function() {
-       /*  $(".checkbox").val(($(this).is(':checked')) ? "Yes" : "Off"); */
-       if($(".checkbox").is(':checked')){
-    	   $(".checkbox").val = "Yes";
-       }else{
-    	   $(".checkbox").val = "Off";
-       }
+$(".checkbox").each(function () { 
+	if ($(this).is(':checked')){
+		$(this).val("Off");
+	}else{
+		$(this).val("Yes");
+	}
 });
-
 </script>
 
 
