@@ -400,14 +400,15 @@ public class FormController {
 			throws IOException {
 
 		// show online form with answers.
-
+		System.out.println("########################## id :" + fileId);
 		Form form = formDao.getForm(fileId);
 		// if (1 > form.getTotalPages())
 		// return "redirect:/form/matchpdf.html?id=" + id + "&pageNum=1";
-		List<Question> questionsPage = form.getQuestionsPage(form.getId());
+		List<Question> questionsPage = form.getQuestionsPage(1);
 
 		models.put("form", form);
 		models.put("questionsPage", questionsPage);
+
 
 		// System.out.println("or file name is : " + pdff);
 		// extract PDF form from server to do the matching.
