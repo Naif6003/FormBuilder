@@ -486,6 +486,7 @@ public class FormController {
 		List<PdfField> pdfarr = new ArrayList<>();
 		String[] names = pdffield.getName().split(",");
 		String[] answers = pdffield.getQuestionId().split(",");
+		String[] type = pdffield.getFieldType().split(",");
 		PdfField pdf = null;
 
 		// inserting pdf objects to the DB table
@@ -494,6 +495,7 @@ public class FormController {
 			pdf.setName(names[i]);
 			pdf.setQuestionId(answers[i]);
 			System.out.println("answers : " + answers[i]);
+			pdf.setFieldType(type[i]);
 			// pdf.setQuestionId(answers[i]);
 			pdf.setFormId(formId);
 			pdfarr.add(pdf);
@@ -521,7 +523,18 @@ public class FormController {
 			// (acroForm.getFields().get(i).getFieldType().equals("checkbox")) {
 			// acroForm.getField(pdfFiles.get(i).getName()).setValue("on");
 			// } else {
+			// System.out.println("type : " + fields.get(i).getFieldType());
+			System.out.println("type  " + pdfFiles.get(i).getFieldType());
+			if (pdfFiles.get(i).getFieldType().equals("Btn") || pdfFiles.get(i).getFieldType() == "Btn") {
+				System.out.println("it's a btns");
+				if (pdfFiles.get(i).getQuestionId().length() == 0 || pdfFiles.get(i).getQuestionId().equals("''")) {
+					acroForm.getField(pdfFiles.get(i).getName()).setValue("Off");
+				} else {
+					acroForm.getField(pdfFiles.get(i).getName()).setValue(pdfFiles.get(i).getQuestionId());
+				}
+			} else {
 			acroForm.getField(pdfFiles.get(i).getName()).setValue(pdfFiles.get(i).getQuestionId());
+			}
 			// s}
 		}
 

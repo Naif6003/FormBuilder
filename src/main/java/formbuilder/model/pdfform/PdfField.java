@@ -23,6 +23,8 @@ public class PdfField implements Serializable {
 
 	private boolean enabled;
 
+	private String fieldType;
+
 	private Integer formId;
 
 	@ManyToOne
@@ -91,6 +93,14 @@ public class PdfField implements Serializable {
 
 	public void setFormId(Integer formId) {
 		this.formId = formId;
+	}
+
+	public String getFieldType() {
+		return fieldType;
+	}
+
+	public void setFieldType(String fieldType) {
+		this.fieldType = fieldType;
 	}
 
 }

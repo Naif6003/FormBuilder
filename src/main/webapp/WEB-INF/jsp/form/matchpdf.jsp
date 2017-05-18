@@ -89,6 +89,7 @@ $(function(){
 			  <c:if test="${field.getFieldType() == 'Tx' || field.getFieldType() == 'text'}">
 			  <td><label> ${field.getFullyQualifiedName()} :</label></td>
 					<td><form:input path="questionId" id="drop" type="text"/></td>
+					<td><form:input path="fieldType" value="${field.getFieldType()}"/></td>
 				</c:if>
 
 			 <form:hidden path="name" id="drop" value="${field.getFullyQualifiedName()}" />
@@ -96,7 +97,8 @@ $(function(){
 			 <c:if test="${field.getFieldType() == 'Btn' || field.getFieldType() == 'checkbox'}">
 			  <td><label> ${field.getPartialName()} :</label></td> 
 			 		 <td><form:input class="checkbox" path="questionId"  id="drop" type="Checkbox" /></td>
-
+			 		<td> <form:hidden path="fieldType" value="${field.getFieldType()}"/></td>
+		
 				</c:if>
 				</c:forEach>
 			</table>

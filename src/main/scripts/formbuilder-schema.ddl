@@ -47,6 +47,7 @@ create sequence hibernate_sequence start 1 increment 1;
     create table pdf_fields (
         id int4 not null,
         enabled boolean not null,
+        fieldType varchar(255),
         formId int4,
         name varchar(255),
         questionId varchar(255),
