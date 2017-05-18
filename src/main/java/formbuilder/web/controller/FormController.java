@@ -404,7 +404,7 @@ public class FormController {
 		Form form = formDao.getForm(fileId);
 		// if (1 > form.getTotalPages())
 		// return "redirect:/form/matchpdf.html?id=" + id + "&pageNum=1";
-		List<Question> questionsPage = form.getQuestionsPage(1);
+		List<Question> questionsPage = form.getQuestionsPage(form.getId());
 
 		models.put("form", form);
 		models.put("questionsPage", questionsPage);
