@@ -517,7 +517,12 @@ public class FormController {
 			// pdfFiles.get(i).getQuestionId() == "Off") {
 			//
 			// }
+			// if
+			// (acroForm.getFields().get(i).getFieldType().equals("checkbox")) {
+			// acroForm.getField(pdfFiles.get(i).getName()).setValue("on");
+			// } else {
 			acroForm.getField(pdfFiles.get(i).getName()).setValue(pdfFiles.get(i).getQuestionId());
+			// s}
 		}
 
 		// generate the new form with old form name plus (new) word

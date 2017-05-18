@@ -110,12 +110,20 @@ $(function(){
 		
 <script>
 
-$(".checkbox").each(function () { 
-	if ($(this).is(':checked')){
-		$(this).val("Off");
+
+ $(".checkbox").each(function () { 
+ if($(this).is(':checked')){
+		$(this).val("Off"); 
+  $(".checkbox").prop("checked", "Off");
+
 	}else{
-		$(this).val("Yes");
-	}
+		$(this).val("On");
+		$(".checkbox").prop("unchecked", "On");	
+	} 
+	
+	
+	
+	
 });
 </script>
 
