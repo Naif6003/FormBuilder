@@ -11,6 +11,7 @@ import formbuilder.model.questionform.ChoiceAnswer;
 import formbuilder.model.questionform.ChoiceQuestion;
 import formbuilder.model.questionform.Form;
 import formbuilder.model.questionform.Question;
+import formbuilder.model.questionform.TextAnswer;
 import formbuilder.model.questionform.TextQuestion;
 
 public interface FormDao {
@@ -33,7 +34,11 @@ public interface FormDao {
 
 	ChoiceQuestion getChoiceQuestion(int qId);
 
-	List<Answer> getAnswers(User user, Form form);
+	List<Answer> getAnswers(User user);
+
+	List<TextAnswer> getUserAnswers(int userId, String answerType);
+
+	List<ChoiceAnswer> getChoiceAnswers(int userId, String answerType);
 
 	Answer getAnswer(User user, Question question);
 
@@ -48,6 +53,8 @@ public interface FormDao {
 	List<ChoiceAnswer> getChoiceAnswer();
 
 	void saveFormMap(FormMapping formMap);
+
+	FormMapping getUserFormMapping(Integer id);
 
 
 }

@@ -18,6 +18,7 @@ import formbuilder.model.questionform.ChoiceAnswer;
 import formbuilder.model.questionform.ChoiceQuestion;
 import formbuilder.model.questionform.Form;
 import formbuilder.model.questionform.Question;
+import formbuilder.model.questionform.TextAnswer;
 import formbuilder.model.questionform.TextQuestion;
 import formbuilder.model.questionform.dao.FormDao;
 
@@ -78,14 +79,33 @@ public class FormDaoImpl implements FormDao {
 	}
 
 	@Override
-	public List<Answer> getAnswers(User user, Form form) {
+	public List<Answer> getAnswers(User user) {
 		List<Answer> answers = entityManager
 				.createQuery(
-						"from Answer where user = :user and form = :form order by question.pageNumber, question.questionNumber",
+						"from Answer where user = :user order by question.pageNumber, question.questionNumber",
 						Answer.class)
 				.setParameter("user", user)
-				.setParameter("form", form).getResultList();
+				.getResultList();
 		return (answers == null) ? new ArrayList<Answer>() : answers;
+	}
+
+	@Override
+	public List<TextAnswer> getUserAnswers(int userId, String answerType) {
+		return entityManager.createQuery(
+				"from TextAnswer where user_id = :user_id and answer_type = :answer_type order by question.pageNumber, question.questionNumber",
+				TextAnswer.class).setParameter("user_id", userId).setParameter("answer_type", answerType)
+				.getResultList();
+
+	}
+
+	@Override
+	public List<ChoiceAnswer> getChoiceAnswers(int userId, String answerType) {
+		return entityManager
+				.createQuery(
+						"from ChoiceAnswer where user_id = :user_id and answer_type = :answer_type order by question.pageNumber, question.questionNumber",
+						ChoiceAnswer.class)
+				.setParameter("user_id", userId).setParameter("answer_type", answerType).getResultList();
+
 	}
 
 	@Override
@@ -127,4 +147,11 @@ public class FormDaoImpl implements FormDao {
 		entityManager.merge(formMap);
 		
 	}
+
+	@Override
+	public FormMapping getUserFormMapping(Integer id) {
+		return entityManager.createQuery("from FormMapping where userId = :userId", FormMapping.class)
+				.setParameter("userId", id).getSingleResult();
+		}
+
 }

@@ -13,6 +13,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDCheckBox;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,11 +36,13 @@ import formbuilder.model.core.User;
 import formbuilder.model.core.dao.UserDao;
 import formbuilder.model.pdfform.Pdf;
 import formbuilder.model.pdfform.PdfField;
+import formbuilder.model.questionform.ChoiceAnswer;
 import formbuilder.model.questionform.ChoiceQuestion;
 import formbuilder.model.questionform.FileQuestion;
 import formbuilder.model.questionform.Form;
 import formbuilder.model.questionform.Question;
 import formbuilder.model.questionform.TagAttribute;
+import formbuilder.model.questionform.TextAnswer;
 import formbuilder.model.questionform.TextQuestion;
 import formbuilder.model.questionform.dao.FormDao;
 
@@ -624,9 +627,44 @@ public class FormController {
 			throws InvalidPasswordException, IOException {
 
 		formDao.saveFormMap(formmapping);
+		int userId = Integer.parseInt(formmapping.getUserId());
+		int formId = Integer.parseInt(formmapping.getAppForm());
+		User user = userDao.getUser(userId);
+		Form form = formDao.getForm(formId);
 
-		// based on user's answer, map questions's answers
+		File realPath = new File(context.getServletContext().getRealPath("/PDFresource/" + formmapping.getPdfName()));
+		PDDocument pdfTemplate = PDDocument.load(realPath);
+		PDDocumentCatalog docCatalog = pdfTemplate.getDocumentCatalog();
+		PDAcroForm acroForm = docCatalog.getAcroForm();
 
-		return "redirect:upload.html";
+
+		List<PdfField> pdf = formDao.getFields(formId);
+		List<TextAnswer> answers = new ArrayList<TextAnswer>();
+		answers = formDao.getUserAnswers(user.getId(), "TEXT");
+
+		for (int j = 0; j < answers.size(); j++) {
+			acroForm.getField(pdf.get(j).getQuestionId()).setValue(answers.get(j).getText().toString());
+		}
+
+		
+		List<ChoiceAnswer> choiceanswers = new ArrayList<ChoiceAnswer>();
+		choiceanswers = formDao.getChoiceAnswers(user.getId(), "CHOICE");
+
+		((PDCheckBox) acroForm.getField("GraduateMasters")).check();
+		//for (int j = 0; j < choiceanswers.size(); j++) {
+//			System.out.println("choice answers: " + choiceanswers.get(j).getSelections());
+//			if (choiceanswers.get(j).getSelections() == "null") {
+//
+//			} else {
+		//	((PDCheckBox) acroForm.getField(choiceanswers.get(j).getSelections())).check();
+			//}
+		// }
+
+		pdfTemplate.save(
+				new File(context.getServletContext()
+						.getRealPath("/PDFresource/new" + form.getName() + user.getFirstName() + "PDF.pdf")));
+		pdfTemplate.close();
+
+		return "redirect:/pdf/upload.html";
 	}
 }

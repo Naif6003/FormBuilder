@@ -1,5 +1,5 @@
  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>s
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <h2> ${form.getName()}</h2>
 
@@ -8,7 +8,7 @@
 <form:select path="userId">
 <c:forEach items="${users}" var="user" varStatus="myIndex">
 <c:if test="${user.getRole() == 'ROLE_USER'}">
-<option> ${user.getFirstName()} </option>  
+<option> ${user.getId()}</option>  
 	 </c:if>
 </c:forEach>
 </form:select>
@@ -22,7 +22,7 @@
 
 <form:select path="appForm">
 <c:forEach items="${forms}" var="form" varStatus="myIndex">
-<option> ${form.getName()} </option>  
+<option> ${form.getId()} </option>  
 
 </c:forEach>
 </form:select>

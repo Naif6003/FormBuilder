@@ -2,6 +2,7 @@ package formbuilder.model.pdfform;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -26,6 +27,9 @@ public class PdfField implements Serializable {
 	private String fieldType;
 
 	private Integer formId;
+
+	@Column(name = "userId")
+	private Integer userId;
 
 	@ManyToOne
 	private Answer answer;
