@@ -2,6 +2,7 @@ package formbuilder.model.questionform.dao;
 
 import java.util.List;
 
+import formbuilder.model.core.FormMapping;
 import formbuilder.model.core.User;
 import formbuilder.model.pdfform.Pdf;
 import formbuilder.model.pdfform.PdfField;
@@ -45,6 +46,8 @@ public interface FormDao {
 	List<PdfField> getFields(Integer formId);
 
 	List<ChoiceAnswer> getChoiceAnswer();
+
+	void saveFormMap(FormMapping formMap);
 
 
 }

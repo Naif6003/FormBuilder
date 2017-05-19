@@ -30,11 +30,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.WebApplicationContext;
 
+import formbuilder.model.core.FormMapping;
 import formbuilder.model.core.User;
 import formbuilder.model.core.dao.UserDao;
 import formbuilder.model.pdfform.Pdf;
 import formbuilder.model.pdfform.PdfField;
-import formbuilder.model.questionform.ChoiceAnswer;
 import formbuilder.model.questionform.ChoiceQuestion;
 import formbuilder.model.questionform.FileQuestion;
 import formbuilder.model.questionform.Form;
@@ -377,42 +377,35 @@ public class FormController {
 	// ################# show each users form ###################
 
 	@RequestMapping(value = "/form/userform.html", method = RequestMethod.GET)
-	public String userform(HttpServletRequest request, @RequestParam("id") Integer id, @RequestParam Integer pageNum,
-			ModelMap models) throws InvalidPasswordException, IOException {
+	public String userform(HttpServletRequest requests, ModelMap models) throws InvalidPasswordException, IOException {
 
-		List<User> users = userDao.getUsers();
+		List<Form> forms = formDao.getForms();
 		File realPath = new File(context.getServletContext().getRealPath("/PDFresource"));
 		File[] files = realPath.listFiles();
 
-		models.put("id", id);
+		models.put("forms", forms);
 		models.put("files", files);
-		request.setAttribute("users", users);
 
 		return "form/userform";
 	}
 
 	// ##################### generate the new PDF file #####################
-
 	@RequestMapping(value = "/form/matchpdf.html", method = RequestMethod.GET)
-	public String matchpdf(HttpServletRequest request,
-			@RequestParam("fileName") Integer fileId, @RequestParam("PDF") String pdff,
+	public String matchpdf(HttpServletRequest request, @RequestParam("fileName") Integer formId, @RequestParam("PDF") String pdff,
 			ModelMap models)
 			throws IOException {
 
-		// show online form with answers.
-		System.out.println("########################## id :" + fileId);
-		Form form = formDao.getForm(fileId);
-		// if (1 > form.getTotalPages())
-		// return "redirect:/form/matchpdf.html?id=" + id + "&pageNum=1";
-		List<Question> questionsPage = form.getQuestionsPage(1);
+		// get the form id
+		Form form = formDao.getForm(formId);
+		List<Question> questions = form.getQuestionsPage(1);
 
 		models.put("form", form);
-		models.put("questionsPage", questionsPage);
-
-
+		models.put("questionsPage", questions);
+		//
+		//
 		// System.out.println("or file name is : " + pdff);
 		// extract PDF form from server to do the matching.
-		File realPath = new File(context.getServletContext().getRealPath("/PDFresource/"+pdff));
+		File realPath = new File(context.getServletContext().getRealPath("/PDFresource/" + pdff));
 		PDDocument pdfTemplate = null;
 		try {
 			pdfTemplate = PDDocument.load(realPath);
@@ -440,36 +433,38 @@ public class FormController {
 
 
 		// ChoiceQuestion choice = new ChoiceQuestion();
-
-		List<ChoiceAnswer> choices = formDao.getChoiceAnswer();
-		for (int i = 0; i < choices.size(); i++) {
-			// System.out.println("choices : " +
-			// choices.get(i).getSelections().toString());
-		}
-
-		String[] checkboxname = fields.get(1).getAlternateFieldName().split(" |_");
-	
-		for (int i = 0; i < fields.size(); i++) {
-
-			/// System.out.println("names are : " + checkboxname[i].toString());
-			// System.out.println("mapping name: " +
-			// fields.get(1).getMappingName()); == mull
-			// System.out.println("getField iterator : " +
-			// fields.get(i).getAcroForm().getFieldIterator()); == nope
-			// System.out.println("value as a string: " +
-			// fields.get(i).getValueAsString()); nope
-			System.out.println("partial name to string : " + fields.get(i).getPartialName().toString());
-			// System.out.println("mapping name: " +
-			// fields.get(1).getAlternateFieldName().split(" "));
-			System.out.println(" ");
-		}
-
+		//
+		// List<ChoiceAnswer> choices = formDao.getChoiceAnswer();
+		// for (int i = 0; i < choices.size(); i++) {
+		// // System.out.println("choices : " +
+		// // choices.get(i).getSelections().toString());
+		// }
+		//
+		// String[] checkboxname = fields.get(1).getAlternateFieldName().split("
+		// |_");
+		//
+		// for (int i = 0; i < fields.size(); i++) {
+		//
+		// /// System.out.println("names are : " + checkboxname[i].toString());
+		// // System.out.println("mapping name: " +
+		// // fields.get(1).getMappingName()); == mull
+		// // System.out.println("getField iterator : " +
+		// // fields.get(i).getAcroForm().getFieldIterator()); == nope
+		// // System.out.println("value as a string: " +
+		// // fields.get(i).getValueAsString()); nope
+		// System.out.println("partial name to string : " +
+		// fields.get(i).getPartialName().toString());
+		// // System.out.println("mapping name: " +
+		// // fields.get(1).getAlternateFieldName().split(" "));
+		// System.out.println(" ");
+		// }
+		//
 		// System.out.println("fields: " +
 		// fields.get(1).getAlternateFieldName());
-		models.put("checkboxname", checkboxname);
-		models.put("choices", choices);
-		models.put("pdfname", pdf);
-		models.put("allPDF", allPDF);
+		// models.put("checkboxname", checkboxname);
+		// models.put("choices", choices);
+		// models.put("pdfname", pdf);
+		// models.put("allPDF", allPDF);
 		models.put("fields", fields);
 		models.put("pdffield", new PdfField());
 
@@ -487,64 +482,151 @@ public class FormController {
 		List<PdfField> pdfarr = new ArrayList<>();
 		String[] names = pdffield.getName().split(",");
 		String[] answers = pdffield.getQuestionId().split(",");
-		String[] type = pdffield.getFieldType().split(",");
+		// String[] type = pdffield.getFieldType().split(",");
 		PdfField pdf = null;
+		//
 
-		// inserting pdf objects to the DB table
+		// // inserting pdf objects to the DB table
 		for (int i = 0; i < answers.length; i++) {
+			System.out.println("names: " + names[i]);
+			System.out.println("answers: " + answers[i]);
+			// System.out.println("types: " + type[i]);
 			pdf = new PdfField();
 			pdf.setName(names[i]);
 			pdf.setQuestionId(answers[i]);
 			System.out.println("answers : " + answers[i]);
-			pdf.setFieldType(type[i]);
+			// pdf.setFieldType(type[i]);
 			// pdf.setQuestionId(answers[i]);
 			pdf.setFormId(formId);
 			pdfarr.add(pdf);
 		}
-
+		//
 		for (int i = 0; i < pdfarr.size(); i++) {
 			formDao.savePdfField(pdfarr.get(i));
 		}
-
-		List<PdfField> pdfFiles = formDao.getFields(formId);
-
-		// get the file that we want to fill
-		File file = new File(context.getServletContext().getRealPath("/PDFresource/" + pdfName));
-		PDDocument pdfTemplate = PDDocument.load(file);
-		PDDocumentCatalog docCatalog = pdfTemplate.getDocumentCatalog();
-		PDAcroForm acroForm = docCatalog.getAcroForm();
-
-		// Match the PDF fields with application fields
-		for (int i = 0; i < pdfFiles.size(); i++) {
-			// if (pdfFiles.get(i).getQuestionId() != "Yes" ||
-			// pdfFiles.get(i).getQuestionId() == "Off") {
-			//
-			// }
-			// if
-			// (acroForm.getFields().get(i).getFieldType().equals("checkbox")) {
-			// acroForm.getField(pdfFiles.get(i).getName()).setValue("on");
-			// } else {
-			// System.out.println("type : " + fields.get(i).getFieldType());
-			System.out.println("type  " + pdfFiles.get(i).getFieldType());
-			if (pdfFiles.get(i).getFieldType().equals("Btn") || pdfFiles.get(i).getFieldType() == "Btn") {
-				System.out.println("it's a btns");
-				if (pdfFiles.get(i).getQuestionId().length() == 0 || pdfFiles.get(i).getQuestionId().equals("''")) {
-					acroForm.getField(pdfFiles.get(i).getName()).setValue("Off");
-				} else {
-					acroForm.getField(pdfFiles.get(i).getName()).setValue(pdfFiles.get(i).getQuestionId());
-				}
-			} else {
-			acroForm.getField(pdfFiles.get(i).getName()).setValue(pdfFiles.get(i).getQuestionId());
-			}
-			// s}
-		}
+		//
+		// List<PdfField> pdfFiles = formDao.getFields(formId);
+		//
+		// // get the file that we want to fill
+		// File file = new
+		// File(context.getServletContext().getRealPath("/PDFresource/" +
+		// pdfName));
+		// PDDocument pdfTemplate = PDDocument.load(file);
+		// PDDocumentCatalog docCatalog = pdfTemplate.getDocumentCatalog();
+		// PDAcroForm acroForm = docCatalog.getAcroForm();
+		//
+		// // Match the PDF fields with application fields
+		// for (int i = 0; i < pdfFiles.size(); i++) {
+		// // if (pdfFiles.get(i).getQuestionId() != "Yes" ||
+		// // pdfFiles.get(i).getQuestionId() == "Off") {
+		// //
+		// // }
+		// // if
+		// // (acroForm.getFields().get(i).getFieldType().equals("checkbox")) {
+		// // acroForm.getField(pdfFiles.get(i).getName()).setValue("on");
+		// // } else {
+		// // System.out.println("type : " + fields.get(i).getFieldType());
+		// System.out.println("type " + pdfFiles.get(i).getFieldType());
+		// if (pdfFiles.get(i).getFieldType().equals("Btn") ||
+		// pdfFiles.get(i).getFieldType() == "Btn") {
+		// System.out.println("it's a btns");
+		// if (pdfFiles.get(i).getQuestionId().length() == 0 ||
+		// pdfFiles.get(i).getQuestionId().equals("''")) {
+		// acroForm.getField(pdfFiles.get(i).getName()).setValue("Off");
+		// } else {
+		// acroForm.getField(pdfFiles.get(i).getName()).setValue(pdfFiles.get(i).getQuestionId());
+		// }
+		// } else {
+		// acroForm.getField(pdfFiles.get(i).getName()).setValue(pdfFiles.get(i).getQuestionId());
+		// }
+		// // s}
+		// }
 
 		// generate the new form with old form name plus (new) word
-		String formName = formDao.getForm(formId).getName();
-		pdfTemplate.save(new File(context.getServletContext().getRealPath("/PDFresource/new" + formName +"PDF.pdf")));
-		pdfTemplate.close();
+		// String formName = formDao.getForm(formId).getName();
+		// pdfTemplate.save(new
+		// File(context.getServletContext().getRealPath("/PDFresource/new" +
+		// formName +"PDF.pdf")));
+		// pdfTemplate.close();
 		return "redirect:listForm.html";
 	}
 
+	/*
+	 * 
+	 * , @RequestParam("PDF") String pdfName,
+	 * 
+	 * @RequestParam("fileName"
+	 * 
+	 * Integer formId, @ModelAttribute PdfField pdffield, @ModelAttribute Pdf
+	 * allPDF
+	 * 
+	 * @RequestParam("formId") Integer formId)
+	 */
+	@RequestMapping(value = "/form/generatePdf.html", method = RequestMethod.GET)
+	public String generatePDF(HttpServletRequest request, ModelMap models)
+			throws InvalidPasswordException, IOException {
 
+		
+		List<User> users = userDao.getUsers();
+		models.put("users", users);
+
+		List<Form> forms = formDao.getForms();
+		models.put("forms", forms);
+
+		File realPath = new File(context.getServletContext().getRealPath("/PDFresource"));
+		File[] files = realPath.listFiles();
+		models.put("files", files);
+		// PDDocument pdfTemplate = PDDocument.load(file);
+		// PDDocumentCatalog docCatalog = pdfTemplate.getDocumentCatalog();
+		// PDAcroForm acroForm = docCatalog.getAcroForm();
+		//
+				 // Match the PDF fields with application fields
+		// for (int i = 0; i < pdfFiles.size(); i++) {
+				 // if (pdfFiles.get(i).getQuestionId() != "Yes" ||
+				// // pdfFiles.get(i).getQuestionId() == "Off") {
+				// //
+				// // }
+				// // if
+				// // (acroForm.getFields().get(i).getFieldType().equals("checkbox")) {
+				// // acroForm.getField(pdfFiles.get(i).getName()).setValue("on");
+				// // } else {
+				// // System.out.println("type : " + fields.get(i).getFieldType());
+				// System.out.println("type " + pdfFiles.get(i).getFieldType());
+				// if (pdfFiles.get(i).getFieldType().equals("Btn") ||
+				// pdfFiles.get(i).getFieldType() == "Btn") {
+				// System.out.println("it's a btns");
+				// if (pdfFiles.get(i).getQuestionId().length() == 0 ||
+				// pdfFiles.get(i).getQuestionId().equals("''")) {
+				// acroForm.getField(pdfFiles.get(i).getName()).setValue("Off");
+				// } else {
+				// acroForm.getField(pdfFiles.get(i).getName()).setValue(pdfFiles.get(i).getQuestionId());
+				// }
+				// } else {
+				// acroForm.getField(pdfFiles.get(i).getName()).setValue(pdfFiles.get(i).getQuestionId());
+				// }
+				// // s}
+				// }
+
+//				 generate the new form with old form name plus (new) word
+//				 String formName = formDao.getForm(formId).getName();
+//				 pdfTemplate.save(new
+//				 File(context.getServletContext().getRealPath("/PDFresource/new" +
+//				 formName +"PDF.pdf")));
+//				 pdfTemplate.close();
+		
+		
+		models.put("formmapping", new FormMapping());
+		return "form/generatePdf";
+	}
+
+	@RequestMapping(value = "/form/generatePdf.html", method = RequestMethod.POST)
+	public String generatePdf(HttpServletRequest request, ModelMap models, @ModelAttribute FormMapping formmapping)
+			throws InvalidPasswordException, IOException {
+
+		formDao.saveFormMap(formmapping);
+
+		// based on user's answer, map questions's answers
+
+		return "redirect:upload.html";
+	}
 }

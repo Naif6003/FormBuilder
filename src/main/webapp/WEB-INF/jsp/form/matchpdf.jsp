@@ -16,7 +16,7 @@
   .right {width: 30%; float: left; margin: 1em;}
   .yellow {background: yellow;}
 </style>
-<script>
+<!-- <script>
 $(function(){
     $("span").draggable({
         revert: "invalid"
@@ -31,9 +31,9 @@ $(function(){
           ui.draggable.parent().remove(); 
           
         }
-    });
+    });s
 });
-</script>
+</script> -->
 
 </head>
 <body dropzone="">
@@ -49,35 +49,38 @@ $(function(){
 			<h4 class="panel-title">PAGE ${param.pageNum}</h4>
 		</div>
 		<div class="panel-body">
+		<form:form modelAttribute="pdffield"  class="pdffield" >
 			<c:choose>
 				<c:when test="${empty questionsPage}">
 					<h3 class="text-center">There is no question on this page.</h3>
 				</c:when>
 				<c:otherwise>
 				<table class="table table-striped table-bordered-2" style="text-align= center; vertical-align:middle;" >
-				<thead> <tr><th> Question id </th> <th> Question </th> <th> Answer </th></tr> </thead>
+				<thead> <tr><th> Question id </th> <th> Question </th></tr> </thead>
+				
 					<c:forEach items="${questionsPage}" var="question">
 						 	<tr><td><span> ${question.getId()} </span></td>
-						 	<td> ${question.getDescription()}</td>
-						 	<c:if test="${question.getTagAttribute().getType() == 'text' }">
-						 	<td><span> ${question.getAnswers()} </span></td>
-						 	</c:if>
-						  <c:if test="${question.getTagAttribute().getType() == 'checkbox' }">
-						  <c:forEach items="${choices}" var="choice">
-						  <td><span> ${choice.getSelections().toString()} </span></td>
-						  </c:forEach>
-						  </c:if></tr>  
-	
+						 	<td> <form:input path="name" value="${question.getDescription()}" /></td> 
+						 	<td>
+						 	<form:select path="questionId">
+						 	<c:forEach items="${fields}" var="field">
+						 		<form:option value="${field.getFullyQualifiedName()}"></form:option> 
+						 	</c:forEach>
+						 	</form:select>
+						 	</td>
 					</c:forEach>
 					</table>
 				</c:otherwise>
 			</c:choose>
+			<input type="submit" name="submit"  class="btn btn-success btn-raised" >
+			<form:hidden path="fieldType" value="${field.getFieldType()}"/>
+			</form:form>
 			</div>
 
 			
 			
 			
-			<div>
+			<%-- <div>
 			<form:form modelAttribute="pdffield"  class="pdffield" >
 			<table class="table table-striped table-bordered-2" style="text-align= center; vertical-align:middle;">
 			
@@ -107,10 +110,10 @@ $(function(){
 			<input type="hidden" value="${pdfname}" />
 			 
 			</form:form>
-			</div> 
+			</div>  --%>
 		</div>
 		
-<script>
+<!-- <script>
 
 
  $(".checkbox").each(function () { 
@@ -127,7 +130,7 @@ $(function(){
 	
 	
 });
-</script>
+</script> -->
 
 
 

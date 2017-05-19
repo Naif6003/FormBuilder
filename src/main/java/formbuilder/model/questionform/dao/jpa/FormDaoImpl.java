@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import formbuilder.model.core.FormMapping;
 import formbuilder.model.core.User;
 import formbuilder.model.pdfform.Pdf;
 import formbuilder.model.pdfform.PdfField;
@@ -119,5 +120,11 @@ public class FormDaoImpl implements FormDao {
 	@Override
 	public List<ChoiceAnswer> getChoiceAnswer() {
 		return entityManager.createQuery("from ChoiceAnswer order by id", ChoiceAnswer.class).getResultList();
+	}
+
+	@Override
+	public void saveFormMap(FormMapping formMap) {
+		entityManager.merge(formMap);
+		
 	}
 }

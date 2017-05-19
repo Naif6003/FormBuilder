@@ -43,22 +43,15 @@ $(function(){
 				<h4> Generate new PDF </h4>
 				</div>
 <table class="table table-striped table-bordered-2" style="text-align= center; vertical-align:middle;" >
-<thead> <tr><th> User name </th><th> Form ID </th><th> Forms assign to user </th></tr>
+<thead> <tr><th> Form ID </th><th> Form Name </th></tr>
 </thead>
 <tbody>
-	<c:forEach items="${users}" var="user">
-	<c:if test="${user.getRole() == 'ROLE_USER'}">
+	<c:forEach items="${forms}" var="form">
 	<tr>
-		<td><c:out value="${user.getFirstName()}" /></td>
-		
-		<c:forEach items="${user.getForms()}" var="form">
-		<%--  <td><a  href="matchpdf.html?id=${form.getId()}&pageNum=1" ><c:out value="${form.getName()}" /></a></td>  --%>
 		<td><span>${form.getId()}</span> </td>
 		<td><span>${form.getName()}</span></td>
+		</tr>
 		</c:forEach>
-	</tr>
-	</c:if>
-	</c:forEach>
 </tbody>
 </table>
 <br />

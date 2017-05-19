@@ -18,6 +18,8 @@
 				  <li><a href="/formbuilder/user/list.html">Users</a></li>
 			  	  <li><a href="/formbuilder/form/listForm.html">Forms</a></li>
 			  	  <li><a href="/formbuilder/pdf/upload.html">Upload PDF</a></li>
+			  	  <li><a href="form/userform.html">Mapping</a></li>
+			  	  <li><a href="form/generatePdf.html">Generate PDF</a></li>
 				</security:authorize>
 				
 				<security:authorize access="hasRole('ROLE_USER')">
